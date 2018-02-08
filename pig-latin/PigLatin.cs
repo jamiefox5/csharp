@@ -1,120 +1,146 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 
 public static class PigLatin
 {
     public static string Translate(string word)
     {
-        string[] words = word.Split(' ');
+        string[] wrds = wrd.Split(' ');
         string translation = "";
-        string[] vowels = new string[] { "a", "e", "i", "o", "u", "y" };
         StringBuilder output = new StringBuilder();
         string result = "";
 
-        foreach (string wrd in words)
-        // wrd because word is already used above//
+
+
+
+        if (word.Substring(0, 1) == "a")
         {
-            string firstLetter = wrd.Substring(0, 1);
-            string secondLetter = wrd.Substring(1, 1);
-            //c# ternary operation//
-            string thirdLetter = (wrd.Length > 2) ? wrd.Substring(2, 1) : null;
-
-            switch (firstLetter)
-            {
-                case "a":
-                    translation = wrd + "ay";
-                    output.Append(translation);
-                    break;
-                case "e":
-                    translation = wrd + "ay";
-                    output.Append(translation);
-                    break;
-                case "i":
-                    translation = wrd + "ay";
-                    output.Append(translation);
-                    break;
-                case "o":
-                    translation = wrd + "ay";
-                    output.Append(translation);
-                    break;
-                case "u":
-                    translation = wrd + "ay";
-                    output.Append(translation);
-                    break;
-                default:
-                    // The word starts with a consonant
-
-                    // Handle "qu", for example "queen" becomes "eenquay"
-
-                    if (firstLetter == "q" && secondLetter == "u")
-                    {
-                        translation = wrd.Substring(2) + firstLetter + secondLetter + "ay";
-                        output.Append(translation);
-                        break;
-                    }
-
-                    // Handle "xr" and "yt"
-
-                    if ((firstLetter == "x" && secondLetter == "r") || (firstLetter == "y" && secondLetter == "t"))
-                    {
-                        translation = wrd + "ay";
-                        output.Append(translation);
-                        break;
-                    }
-
-
-                    // check if the second letter is also a consonant, essentially verifying that the word starts with a consonant cluster
-                    bool isVowel = false;
-                    foreach (string letter in vowels)
-                    {
-                        if (secondLetter == letter)
-                        {
-                            isVowel = true;
-                        }
-                    }
-
-                    if (isVowel)
-                    {
-                        // the second letter is a vowel
-                        translation = wrd.Substring(1) + firstLetter + "ay";
-                        output.Append(translation);
-                    }
-                    else
-                    {
-                        // check if the third letter is also a consonant, essentially verifying that the word starts with a consonant cluster                    
-                        isVowel = false; // reset value
-                        foreach (string letter in vowels)
-                        {
-                            if (thirdLetter == letter)
-                            {
-                                if (thirdLetter != "u")
-                                {
-                                    // Handle any consonant + "qu" at the word's beginning, example "square" becomes "aresquay"
-                                    // see: http://stesie.github.io/2016/08/pig-latin-kata
-                                    isVowel = true;
-                                }
-                            }
-                        }
-
-                        if (isVowel)
-                        {
-                            // the second letter is a consonant
-                            translation = wrd.Substring(2) + firstLetter + secondLetter + "ay";
-                            output.Append(translation);
-                        }
-                        else
-                        {
-                            translation = wrd.Substring(3) + firstLetter + secondLetter + thirdLetter + "ay";
-                            output.Append(translation);
-                        }
-                    }
-
-                    break;
-            }
-
-            output.Append(" "); // adds space between words
+            translation = word + "ay";
+            output.Append(translation);
+        }
+        else if (word.Substring(0, 1) == "e")
+        {
+            translation = word + "ay";
+            output.Append(translation);
+        }
+        else if (word.Substring(0, 1) == "i")
+        {
+            translation = word + "ay";
+            output.Append(translation);
+        }
+        else if (word.Substring(0, 1) == "o")
+        {
+            translation = word + "ay";
+            output.Append(translation);
+        }
+        else if (word.Substring(0, 1) == "u")
+        {
+            translation = word + "ay";
+            output.Append(translation);
         }
 
-        result = output.ToString().TrimEnd(); // trims the space at end of string//
-        return result;
-    }
-}
+        else if (word.Substring(0, 1) == "m")
+        {
+            string diagraph = word.Substring(0, 1);
+            string restOfWord = word.Substring(1);
+            translation = restOfWord + diagraph + "ay";
+            output.Append(translation);
+
+        }
+        else if (word.Substring(0, 3) == "equ")
+        {
+            translation = word + "ay";
+            output.Append(translation);
+        }
+        else if (word.Substring(0, 2) == "yt")
+        {
+            translation = word + "ay";
+            output.Append(translation);
+        }
+
+        else if (word.Substring(0, 2) == "xr")
+        {
+            translation = word + "ay";
+            output.Append(translation);
+        }
+        else if (word.Substring(0, 2) == "ch")
+        {
+            string diagraph = word.Substring(0, 2);
+            string restOfWord = word.Substring(2);
+            translation = restOfWord + diagraph + "ay";
+            output.Append(translation);
+
+        }
+
+        else if (word.Substring(0, 3) == "squ")
+        {
+            string consonantDiagraph = word.Substring(0, 3);
+            string restOfWord = word.Substring(3);
+            translation = restOfWord + consonantDiagraph + "ay";
+            output.Append(translation);
+        }
+        else if (word.Substring(0, 2) == "th")
+        {
+
+            if (word.Substring(0, 3) == "thr")
+            {
+                string consonantDiagraph = word.Substring(0, 3);
+                string restOfWord = word.Substring(3);
+                translation = restOfWord + consonantDiagraph + "ay";
+                output.Append(translation);
+            }
+            else
+            {
+                string diagraph = word.Substring(0, 2);
+                string restOfWord = word.Substring(2);
+                translation = restOfWord + diagraph + "ay";
+                output.Append(translation);
+            }
+        }
+
+        else if (word.Substring(0, 2) == "qu")
+        {
+            string diagraph = word.Substring(0, 2);
+            string restOfWord = word.Substring(2);
+            translation = restOfWord + diagraph + "ay";
+            output.Append(translation);
+        }
+
+
+        else if (word.Substring(0, 3) == "sch")
+        {
+            string consonantDiagraph = word.Substring(0, 3);
+            string restOfWord = word.Substring(3);
+            translation = restOfWord + consonantDiagraph + "ay";
+            output.Append(translation);
+        }
+
+        else if (word.Substring(0, 2) == "rh")
+        {
+            string diagraph = word.Substring(0, 2);
+            string restOfWord = word.Substring(2);
+            translation = restOfWord + diagraph + "ay";
+            output.Append(translation);
+
+        }
+
+        else
+        {
+            string firstLetter = word.Substring(0, 1);
+            string restOfWord = word.Substring(1);
+            translation = restOfWord + firstLetter + "ay";
+            output.Append(translation);
+        }
+
+        {
+            output.Append(" ");
+        }
+
+        {
+            result = output.ToString().TrimEnd();
+            return result;
+        }
+
+
+
+        {
