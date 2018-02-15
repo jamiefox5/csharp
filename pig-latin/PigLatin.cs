@@ -1,118 +1,109 @@
-﻿sing System.Text;
+﻿using System.Text;
+using System;
 
 public static class PigLatin
 {
+
     public static string Translate(string word)
     {
-        string[] words = word.Split(' ');
+        string[] words = word.Split(" ");
+        // space at end of each string.. will separate for the phrase
+        StringBuilder builder = new StringBuilder();
+        string output = "";
         string translation = "";
-        string[] vowels = new string[] { "a", "e", "i", "o", "u", "y" };
-        StringBuilder output = new StringBuilder();
-        string result = "";
+        char[] vowels = new char[] { 'a', 'e', 'i', 'o', 'u' };
 
-        foreach (string wrd in words)  //wrd because "word" was used//
+
+        foreach (var item in words)
         {
-            string firstLetter = wrd.Substring(0, 1);
-            string secondLetter = wrd.Substring(1, 1);
-            string thirdLetter = (wrd.Length > 2) ? wrd.Substring(2, 1) : null; //turnary operator (?)to run statement for (my)//
+            //first letter is a vowel or begins with xr or yt
+            int vowelIndex = item.IndexOfAny(vowels, 0, 1);
 
-            switch (firstLetter)
+            if (vowelIndex == 0 || item.IndexOf("xr") == 0 || item.IndexOf("yt") == 0)
             {
-                case "a": // like ELSE IF//
-                    translation = wrd + "ay";
-                    output.Append(translation);
-                    break;// look for condition then goes next 
-                case "e":
-                    translation = wrd + "ay";
-                    output.Append(translation);
-                    break;
-                case "i":
-                    translation = wrd + "ay";
-                    output.Append(translation);
-                    break;
-                case "o":
-                    translation = wrd + "ay";
-                    output.Append(translation);
-                    break;
-                case "u":
-                    translation = wrd + "ay";
-                    output.Append(translation);
-                    break;
-                default: // like ELSE statement//
-                    // The word starts with a consonant
-
-                    // Handle "qu", for example "queen" becomes "eenquay"
-                    // see: http://stesie.github.io/2016/08/pig-latin-kata
-                    if (firstLetter == "q" && secondLetter == "u")
-                    {
-                        translation = wrd.Substring(2) + firstLetter + secondLetter + "ay";
-                        output.Append(translation);
-                        break;
-                    }
-
-                    // Handle "xr" and "yt"
-                    // see: http://stesie.github.io/2016/08/pig-latin-kata
-                    if ((firstLetter == "x" && secondLetter == "r") || (firstLetter == "y" && secondLetter == "t"))
-                    {
-                        translation = wrd + "ay";
-                        output.Append(translation);
-                        break;
-                    }
-
-
-                    // check if the second letter is also a consonant, essentially verifying that the word starts with a consonant cluster
-                    bool isVowel = false;
-                    foreach (string letter in vowels)
-                    {
-                        if (secondLetter == letter)
-                        {
-                            isVowel = true;
-                        }
-                    }
-
-                    if (isVowel)
-                    {
-                        // the second letter is a vowel
-                        translation = wrd.Substring(1) + firstLetter + "ay";
-                        output.Append(translation);
-                    }
-                    else
-                    {
-                        // check if the third letter is also a consonant, essentially verifying that the word starts with a consonant cluster                    
-                        isVowel = false; // reset value
-                        foreach (string letter in vowels)
-                        {
-                            if (thirdLetter == letter)
-                            {
-                                if (thirdLetter != "u")
-                                {
-                                    // Handle any consonant + "qu" at the word's beginning, example "square" becomes "aresquay"
-                                    // see: http://stesie.github.io/2016/08/pig-latin-kata
-                                    isVowel = true;
-                                }
-                            }
-                        }
-
-                        if (isVowel)
-                        {
-                            // the second letter is a consonant
-                            translation = wrd.Substring(2) + firstLetter + secondLetter + "ay";
-                            output.Append(translation);
-                        }
-                        else
-                        {
-                            translation = wrd.Substring(3) + firstLetter + secondLetter + thirdLetter + "ay";
-                            output.Append(translation);
-                        }
-                    }
-
-                    break;
+                translation = word + "ay";
             }
 
-            output.Append(" "); // adds space between words // if only only one word goes to result 
-        }
+            // first Letter of word is NOT a vowel Rules
 
-        result = output.ToString().TrimEnd(); // returns a string then the trim end gets rid of the space 
-        return result;
+            else
+            {
+                vowelIndex = item.IndexOfAny(vowels, 1, 1);
+
+                // excluding "qu" as a word starting with 1 consonant
+                //making sure "qu" is read as a pair and the u isn't read as a vowel
+
+                if (item.IndexOf("qu") == 0)
+                {
+                    vowelIndex = -1;
+                }
+
+                // starts with 1 consonant > move first letter and add "ay"
+
+                if (vowelIndex == 1)
+
+                {
+                    string firstLetter = item.Substring(0, 1);
+                    string restOfWord = item.Substring(1);
+                    translation = restOfWord + firstLetter + "ay";
+                }
+
+                else
+                {
+                    // 2 letter word and "y" is second letter > move first letter to end + "ay"
+
+                    if (item.Length == 2)
+                    {
+                        if (item.Substring(1, 1) == "y")
+                        {
+                            string firstLetter = item.Substring(0, 1);
+                            string restOfWord = item.Substring(1);
+                            translation = restOfWord + firstLetter + "ay";
+                        }
+                    }
+
+                    else
+                    {
+                        // starts with a consonant followed by "qu" > move first letter and "qu" to end and add "ay"
+
+                        if (item.Contains("qu"))
+                        {
+                            int i = item.IndexOf("qu") + 1;
+                            string firstLetters = item.Substring(0, i + 1);
+                            string restOfWord = item.Substring(i + 1);
+                            translation = restOfWord + firstLetters + "ay";
+
+                        }
+
+                        // "y' after consonant cluster > move consonant cluster NOT including "y" to end and add "ay"
+
+                        else if (item.IndexOfAny(vowels) == -1 && item.Contains("y"))
+                        {
+                            int i = item.IndexOf("y");
+                            string firstLetters = item.Substring(0, i);
+                            string restOfWord = item.Substring(i);
+                            translation = restOfWord + firstLetters + "ay";
+                        }
+
+                        // move consonant cluster (2 letters or 3 letters) to end and add "ay"
+
+                        else
+                        {
+                            int i = item.IndexOfAny(vowels);
+                            string firstLetters = item.Substring(0, i);
+                            string restOfWord = item.Substring(i);
+                            translation = restOfWord + firstLetters + "ay";
+                        }
+                    }
+                }
+
+            }
+            builder.Append(translation + " ");
+
+
+        }
+        output = builder.ToString().TrimEnd();
+        return output;
+
     }
 }
